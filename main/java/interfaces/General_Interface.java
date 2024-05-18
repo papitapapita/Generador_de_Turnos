@@ -4,17 +4,79 @@
  */
 package interfaces;
 
+import dataStructures.QueueList;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+
 /**
  *
  * @author manyd
  */
 public class General_Interface extends javax.swing.JFrame {
 
+    QueueList<Integer> userQueue;
+    //Variable para saber cómo va la cola de agentes libres
+    QueueList<Agent> freeAgentQueue;
+    int turnCounter;
+    Agent[] agents;
     /**
      * Creates new form General_Interface
      */
     public General_Interface() {
         initComponents();
+        initializeQueues();
+        initializeAgents();
+
+    }
+
+    private void initializeQueues(){
+        userQueue = new QueueList<>();
+        freeAgentQueue = new QueueList<>();
+        turnCounter = 0;
+    }
+
+    private void initializeAgents(){
+        agents = new Agent[4];
+        agents[0] = new Agent(place1Box, place1Text, place1Btn, 1);
+        agents[1] = new Agent(place2Box, place2Text, place2Btn,2);
+        agents[2] = new Agent(place3Box, place3Text, place3Btn, 3);
+        agents[3] = new Agent(place4Box, place4Text, place4Btn, 4);
+
+        for(Agent agent: agents)
+            freeAgentQueue.enqueue(agent);
+    }
+
+    public static class Agent{
+        private final int agentID;
+        private final JPanel box;
+        private final JLabel text;
+        private final JButton button;
+
+
+        public Agent(JPanel box, JLabel text, JButton button, int agentID) {
+            this.box = box;
+            this.text = text;
+            this.button = button;
+            this.agentID = agentID;
+        }
+
+        public JPanel getBox() {
+            return box;
+        }
+
+        public JLabel getText() {
+            return text;
+        }
+
+        public JButton getButton() {
+            return button;
+        }
+
+        public int getAgentID() {
+            return agentID;
+        }
     }
 
     /**
@@ -61,12 +123,36 @@ public class General_Interface extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         place1Btn.setText("Libre");
+        place1Btn.setEnabled(false);
+        place1Btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                place1BtnActionPerformed(evt);
+            }
+        });
 
         place2Btn.setText("Libre");
+        place2Btn.setEnabled(false);
+        place2Btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                place2BtnActionPerformed(evt);
+            }
+        });
 
         place3Btn.setText("Libre");
+        place3Btn.setEnabled(false);
+        place3Btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                place3BtnActionPerformed(evt);
+            }
+        });
 
         place4Btn.setText("Libre");
+        place4Btn.setEnabled(false);
+        place4Btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                place4BtnActionPerformed(evt);
+            }
+        });
 
         place1Box.setBackground(new java.awt.Color(0, 255, 0));
 
@@ -161,6 +247,11 @@ public class General_Interface extends javax.swing.JFrame {
         );
 
         requestTurnBtn.setText("Solicitar Turno");
+        requestTurnBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                requestTurnBtnActionPerformed(evt);
+            }
+        });
 
         awaitingTurnsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -360,6 +451,95 @@ public class General_Interface extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void place1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_place1BtnActionPerformed
+        setAgentFree(agents[0]);
+    }//GEN-LAST:event_place1BtnActionPerformed
+
+    private void place2BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_place2BtnActionPerformed
+        setAgentFree(agents[1]);
+    }//GEN-LAST:event_place2BtnActionPerformed
+
+    private void place3BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_place3BtnActionPerformed
+        setAgentFree(agents[2]);
+    }//GEN-LAST:event_place3BtnActionPerformed
+
+    private void place4BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_place4BtnActionPerformed
+        setAgentFree(agents[3]);
+    }//GEN-LAST:event_place4BtnActionPerformed
+
+    private void requestTurnBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestTurnBtnActionPerformed
+        userQueue.enqueue(++turnCounter);
+        Agent agent = searchFreeAgent();
+        if(agent != null)
+            assignTurn(agent);
+        else
+            addToWaitingList(userQueue.getTail().getElement());
+
+        //printTable
+    }//GEN-LAST:event_requestTurnBtnActionPerformed
+
+
+    /**
+     * Método que cambia todos los elementos de un agente a libre
+     * @param box jPanel del agente que se cambia a color verde
+     * @param text texto del agente  se va cambiar a libre
+     * @param button Boton del agente que se deshabilita
+     */
+    private void setAgentFree(Agent agent){
+        agent.getBox().setBackground(Color.GREEN);
+        agent.getText().setText("Libre");
+        agent.getButton().setEnabled(false);
+        freeAgentQueue.enqueue(agent);
+        if(!userQueue.isEmpty())
+            assignTurn(agent);
+    }
+
+    private void assignTurn(Agent agent){
+        int turn = userQueue.dequeue();
+        showUserTurn(turn, agent);
+        agent.getBox().setBackground(Color.RED);
+        agent.getText().setText(String.valueOf(turn));
+        agent.getButton().setEnabled(true);
+        removeWaitingList(turn);
+    }
+
+    private Agent searchFreeAgent(){
+        return freeAgentQueue.isEmpty() ? null : freeAgentQueue.dequeue();
+    }
+
+    private void showUserTurn(int turn, Agent agent){
+        DefaultTableModel modelUserTable = (DefaultTableModel) userTable.getModel();
+
+        for(int row = 0; row < modelUserTable.getRowCount(); row++)
+            if(Integer.parseInt(modelUserTable.getValueAt(row, 1).toString())  == agent.getAgentID()){
+                modelUserTable.removeRow(row);
+                break;
+            }
+
+        Object[] rowData = {
+                String.valueOf(turn),
+                String.valueOf(agent.getAgentID())
+        };
+        modelUserTable.addRow(rowData);
+        JOptionPane.showMessageDialog(jInternalFrame2, String.format("Turno %d pasar al asersor %d", turn, agent.getAgentID()));
+    }
+
+    private void addToWaitingList(int turn){
+        DefaultTableModel waitingListModel = (DefaultTableModel) awaitingTurnsTable.getModel();
+        Object[] info = {turn};
+        waitingListModel.addRow(info);
+    }
+
+    private void removeWaitingList(int turn){
+        DefaultTableModel waitingListModel = (DefaultTableModel) awaitingTurnsTable.getModel();
+        for(int row = 0;  row < waitingListModel.getRowCount(); row++)
+            if(Integer.parseInt(waitingListModel.getValueAt(row, 0).toString())  == turn){
+                waitingListModel.removeRow(row);
+                break;
+            }
+    }
+
 
     /**
      * @param args the command line arguments
