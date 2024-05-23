@@ -1,6 +1,10 @@
 package dataStructures;
 
-public class QueueList<E> extends List<E> {
+/**
+ * Clase que implementa una lista dinámica de tipo cola
+ * @param <E> El tipo de elemento que se almacenará en la lista
+ */
+public class QueueList<E> extends List<E> implements Queue<E>{
     public QueueList(){
         super();
     }
@@ -13,7 +17,6 @@ public class QueueList<E> extends List<E> {
         // Crea un nuevo nodo con el elemento especificado y establece su siguiente nodo como nulo
         Node<E> newest = new Node<>(e, null);
 
-        // Crea un nuevo nodo con el elemento especificado y establece su siguiente nodo como nulo
         if (isEmpty())
             setHead(newest);
         else
@@ -45,15 +48,19 @@ public class QueueList<E> extends List<E> {
         if(isEmpty())
             return null;
 
-        E answer = getHead().getElement();
-
-        if(getHead() == getTail())
-            setTail(null);
-
+        // Obtener el elemento del nodo de la cabeza
+        E element = getHead().getElement();
+        // Mover la cabeza al siguiente nodo
         setHead(getHead().getNext());
 
+        // Si la nueva cabeza es null, la cola está vacía, por lo que también se debe
+        // poner la cola en null
+        if(getHead() == null)
+            setTail(null);
+
+        // Disminuir el tamaño de la cola
         size--;
 
-        return answer;
+        return element;
     }
 }

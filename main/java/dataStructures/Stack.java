@@ -1,5 +1,9 @@
 package dataStructures;
 
+/**
+ * Interfaz que representa una pila
+ * @param <E>
+ */
 public interface Stack<E> {
     /**
      * Inserta un elemento en la parte de arriba de la pila

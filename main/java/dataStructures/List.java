@@ -1,5 +1,9 @@
 package dataStructures;
 
+/**
+ * Clase que representa una estructura de datos dinámica de tipo lista simplemente enlazada
+ * @param <E> El tipo de objeto almacenado dentro de la lista
+ */
 public class List<E> {
     private Node<E> head = null; // La cabecera de la lista
     private Node<E> tail = null; // La cola de la lista

@@ -16,11 +16,15 @@ import java.awt.*;
  */
 public class General_Interface extends javax.swing.JFrame {
 
+    // Variable de la cola de turnos de los usuarios
     QueueList<Integer> userQueue;
-    //Variable para saber cómo va la cola de agentes libres
+    // Variable de la cola de agentes disponibles
     QueueList<Agent> freeAgentQueue;
-    int turnCounter;
+    // Un arreglo de agentes
     Agent[] agents;
+    // Un contador de turnos
+    int turnCounter;
+
     /**
      * Creates new form General_Interface
      */
@@ -28,33 +32,65 @@ public class General_Interface extends javax.swing.JFrame {
         initComponents();
         initializeQueues();
         initializeAgents();
-
     }
 
+    /**
+     * Inicializa las colas y el contador de turnos.
+     * Este método se encarga de inicializar las estructuras de datos necesarias para gestionar
+     * la cola de usuarios y la cola de agentes libres. También reinicia el contador de turnos.
+     */
     private void initializeQueues(){
+        // Inicializa la cola de usuarios
         userQueue = new QueueList<>();
+
+        // Inicializa la cola de agentes libres
         freeAgentQueue = new QueueList<>();
+
+        // Reinicia el contador de turnos a cero
         turnCounter = 0;
     }
 
-    private void initializeAgents(){
+    /**
+     * Inicializa los agentes y los añade a la cola de agentes libres.
+     * Este método se encarga de crear una lista de agentes, asociando cada uno con sus respectivos
+     * componentes de la interfaz gráfica (panel, etiqueta y botón). Luego, añade cada agente
+     * a la cola de agentes libres.
+     */
+    private void initializeAgents() {
+        // Inicializa el arreglo de agentes con espacio para 4 agentes
         agents = new Agent[4];
+
+        // Crea e inicializa cada agente con sus componentes gráficos y un ID único
         agents[0] = new Agent(place1Box, place1Text, place1Btn, 1);
-        agents[1] = new Agent(place2Box, place2Text, place2Btn,2);
+        agents[1] = new Agent(place2Box, place2Text, place2Btn, 2);
         agents[2] = new Agent(place3Box, place3Text, place3Btn, 3);
         agents[3] = new Agent(place4Box, place4Text, place4Btn, 4);
 
-        for(Agent agent: agents)
+        // Añade cada agente a la cola de agentes libres
+        for (Agent agent : agents) {
             freeAgentQueue.enqueue(agent);
+        }
     }
 
-    public static class Agent{
-        private final int agentID;
-        private final JPanel box;
-        private final JLabel text;
-        private final JButton button;
+    /**
+     * La clase Agent representa un agente en el sistema, asociado a componentes gráficos específicos.
+     * Cada agente tiene un identificador único (agentID) y está vinculado a un JPanel, JLabel y JButton
+     * que representan su estado visual en la interfaz gráfica.
+     */
+    public static class Agent {
+        private final int agentID;      // Identificador único del agente
+        private final JPanel box;       // Panel que representa el área del agente en la interfaz gráfica
+        private final JLabel text;      // Etiqueta que muestra información sobre el agente
+        private final JButton button;   // Botón asociado al agente
 
-
+        /**
+         * Constructor para crear un nuevo agente.
+         *
+         * @param box El JPanel asociado al agente.
+         * @param text El JLabel asociado al agente.
+         * @param button El JButton asociado al agente.
+         * @param agentID El identificador único del agente.
+         */
         public Agent(JPanel box, JLabel text, JButton button, int agentID) {
             this.box = box;
             this.text = text;
@@ -62,18 +98,38 @@ public class General_Interface extends javax.swing.JFrame {
             this.agentID = agentID;
         }
 
+        /**
+         * Obtiene el JPanel asociado al agente.
+         *
+         * @return El JPanel del agente.
+         */
         public JPanel getBox() {
             return box;
         }
 
+        /**
+         * Obtiene el JLabel asociado al agente.
+         *
+         * @return El JLabel del agente.
+         */
         public JLabel getText() {
             return text;
         }
 
+        /**
+         * Obtiene el JButton asociado al agente.
+         *
+         * @return El JButton del agente.
+         */
         public JButton getButton() {
             return button;
         }
 
+        /**
+         * Obtiene el identificador único del agente.
+         *
+         * @return El ID del agente.
+         */
         public int getAgentID() {
             return agentID;
         }
@@ -452,94 +508,237 @@ public class General_Interface extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void place1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_place1BtnActionPerformed
+    /**
+     * Evento que se ejecuta cuando se presiona el botón asociado al agente 1.
+     * Este método llama a setAgentFree para liberar al agente 1 (agents[0]).
+     * @param evt El evento de acción generado al presionar el botón.
+     */
+    private void place1BtnActionPerformed(java.awt.event.ActionEvent evt) {
         setAgentFree(agents[0]);
-    }//GEN-LAST:event_place1BtnActionPerformed
+    }
 
-    private void place2BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_place2BtnActionPerformed
+    /**
+     * Evento que se ejecuta cuando se presiona el botón asociado al agente 2.
+     * Este método llama a setAgentFree para liberar al agente 2 (agents[1]).
+     * @param evt El evento de acción generado al presionar el botón.
+     */
+    private void place2BtnActionPerformed(java.awt.event.ActionEvent evt) {
         setAgentFree(agents[1]);
-    }//GEN-LAST:event_place2BtnActionPerformed
+    }
 
-    private void place3BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_place3BtnActionPerformed
+    /**
+     * Evento que se ejecuta cuando se presiona el botón asociado al agente 3.
+     * Este método llama a setAgentFree para liberar al agente 3 (agents[2]).
+     * @param evt El evento de acción generado al presionar el botón.
+     */
+    private void place3BtnActionPerformed(java.awt.event.ActionEvent evt) {
         setAgentFree(agents[2]);
-    }//GEN-LAST:event_place3BtnActionPerformed
+    }
 
-    private void place4BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_place4BtnActionPerformed
+    /**
+     * Evento que se ejecuta cuando se presiona el botón asociado al agente 4.
+     * Este método llama a setAgentFree para liberar al agente 4 (agents[3]).
+     * @param evt El evento de acción generado al presionar el botón.
+     */
+    private void place4BtnActionPerformed(java.awt.event.ActionEvent evt) {
         setAgentFree(agents[3]);
-    }//GEN-LAST:event_place4BtnActionPerformed
+    }
 
-    private void requestTurnBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestTurnBtnActionPerformed
+    /**
+     * Maneja el evento de acción generado cuando se presiona el botón de solicitud de turno.
+     * Este método encola un nuevo turno incrementando el contador de turnos, busca un agente libre
+     * y asigna el turno si hay un agente disponible. Si no hay agentes disponibles, añade el turno
+     * a la lista de espera.
+     * @param evt El evento de acción generado al presionar el botón.
+     */
+    private void requestTurnBtnActionPerformed(java.awt.event.ActionEvent evt) {
+        // Incrementa el contador de turnos y encola el nuevo turno
         userQueue.enqueue(++turnCounter);
+
+        // Busca un agente libre
         Agent agent = searchFreeAgent();
+
+        // Asigna el turno si hay un agente libre, de lo contrario añade a la lista de espera
         if(agent != null)
             assignTurn(agent);
         else
             addToWaitingList(userQueue.getTail().getElement());
-
-        //printTable
-    }//GEN-LAST:event_requestTurnBtnActionPerformed
-
+    }
 
     /**
-     * Método que cambia todos los elementos de un agente a libre
-     * @param box jPanel del agente que se cambia a color verde
-     * @param text texto del agente  se va cambiar a libre
-     * @param button Boton del agente que se deshabilita
+     * Marca al agente como libre y lo añade a la cola de agentes libres.
+     * Este método actualiza la interfaz de usuario para mostrar que el agente está libre,
+     * lo añade a la cola de agentes libres y asigna un nuevo turno si hay usuarios en la cola de espera.
+     *
+     * @param agent El agente que se va a marcar como libre.
      */
     private void setAgentFree(Agent agent){
-        agent.getBox().setBackground(Color.GREEN);
-        agent.getText().setText("Libre");
-        agent.getButton().setEnabled(false);
+        // Actualiza la interfaz de usuario para mostrar que el agente está libre
+        updateAgentUIToFree(agent);
+
+        // Añade el agente a la cola de agentes libres
         freeAgentQueue.enqueue(agent);
+
+        // Asigna un nuevo turno si hay usuarios esperando en la cola
         if(!userQueue.isEmpty())
             assignTurn(agent);
     }
 
-    private void assignTurn(Agent agent){
-        int turn = userQueue.dequeue();
-        showUserTurn(turn, agent);
+    /**
+     * Actualiza la interfaz de usuario para mostrar que el agente está libre.
+     * Este método cambia el color del panel del agente a verde, actualiza el texto a "Libre"
+     * y deshabilita el botón del agente.
+     *
+     * @param agent El agente cuya interfaz de usuario se va a actualizar.
+     */
+    private void updateAgentUIToFree(Agent agent){
+        agent.getBox().setBackground(Color.GREEN);
+        agent.getText().setText("Libre");
+        agent.getButton().setEnabled(false);
+    }
+
+
+    /**
+     * Actualiza la interfaz de usuario del agente para mostrar el turno asignado.
+     * Este método cambia el color del panel del agente a rojo, actualiza el texto con el turno
+     * asignado y habilita el botón del agente.
+     * @param agent El agente cuya interfaz de usuario se va a actualizar.
+     * @param turn El turno asignado al agente.
+     */
+    private void updateAgentUIWithTurn(int turn, Agent agent){
         agent.getBox().setBackground(Color.RED);
         agent.getText().setText(String.valueOf(turn));
         agent.getButton().setEnabled(true);
+    }
+
+    /**
+     * Asigna un turno a un agente.
+     * Este método desencola un turno de la cola de usuarios, muestra el turno en la interfaz
+     * del agente, actualiza la interfaz de usuario para reflejar el estado ocupado del agente,
+     * y elimina el turno de la lista de espera.
+     * @param agent El agente al que se le asignará el turno.
+     */
+    private void assignTurn(Agent agent){
+        // Desencola el siguiente turno
+        int turn = userQueue.dequeue();
+
+        // Muestra el turno en la interfaz del usuario
+        showUserTurn(turn, agent);
+
+        // Actualiza la interfaz de usuario del agente
+        updateAgentUIWithTurn(turn, agent);
+
+        // Elimina el turno de la lista de espera
         removeWaitingList(turn);
     }
 
+    /**
+     * Busca un agente libre en la cola de agentes libres.
+     * Si hay al menos un agente libre en la cola, lo desencola y lo devuelve.
+     * En caso contrario, devuelve null.
+     * @return El agente libre encontrado, o null si no hay agentes libres.
+     */
     private Agent searchFreeAgent(){
-        return freeAgentQueue.isEmpty() ? null : freeAgentQueue.dequeue();
+        // Si la cola de agentes libres está vacía, devuelve null
+        if (freeAgentQueue.isEmpty())
+            return null;
+        else
+            // Si hay agentes libres, desencola y devuelve el primer agente libre
+            return freeAgentQueue.dequeue();
+
     }
 
+    /**
+     * Muestra el turno del usuario en la tabla y muestra un mensaje de alerta.
+     * Este método agrega una nueva fila a la tabla de usuarios con el turno asignado,
+     * eliminando cualquier fila existente para el mismo agente, y muestra un mensaje
+     * de alerta con información sobre el turno asignado al agente.
+     * @param turn El número del turno asignado al usuario.
+     * @param agent El agente al que se le asignó el turno.
+     */
     private void showUserTurn(int turn, Agent agent){
         DefaultTableModel modelUserTable = (DefaultTableModel) userTable.getModel();
 
-        for(int row = 0; row < modelUserTable.getRowCount(); row++)
-            if(Integer.parseInt(modelUserTable.getValueAt(row, 1).toString())  == agent.getAgentID()){
-                modelUserTable.removeRow(row);
-                break;
-            }
+        // Eliminar cualquier fila existente para el mismo agente
+        removeRowForAgent(modelUserTable, agent.getAgentID());
 
-        Object[] rowData = {
-                String.valueOf(turn),
-                String.valueOf(agent.getAgentID())
-        };
+        // Agregar una nueva fila con el turno asignado al agente
+        Object[] rowData = { String.valueOf(turn), String.valueOf(agent.getAgentID()) };
         modelUserTable.addRow(rowData);
-        JOptionPane.showMessageDialog(jInternalFrame2, String.format("Turno %d pasar al asersor %d", turn, agent.getAgentID()));
+
+        // Mostrar un mensaje de alerta con información sobre el turno asignado
+        JOptionPane.showMessageDialog(jInternalFrame2,
+                String.format("Turno %d pasar al asersor %d", turn, agent.getAgentID()));
     }
 
-    private void addToWaitingList(int turn){
-        DefaultTableModel waitingListModel = (DefaultTableModel) awaitingTurnsTable.getModel();
-        Object[] info = {turn};
-        waitingListModel.addRow(info);
-    }
-
-    private void removeWaitingList(int turn){
-        DefaultTableModel waitingListModel = (DefaultTableModel) awaitingTurnsTable.getModel();
-        for(int row = 0;  row < waitingListModel.getRowCount(); row++)
-            if(Integer.parseInt(waitingListModel.getValueAt(row, 0).toString())  == turn){
-                waitingListModel.removeRow(row);
-                break;
+    /**
+     * Elimina cualquier fila de la tabla que corresponda al agente especificado.
+     * Este método busca y elimina cualquier fila de la tabla que tenga el mismo ID de agente
+     * que el proporcionado.
+     * @param tableModel El modelo de la tabla en el que se va a buscar y eliminar la fila.
+     * @param agentID El ID del agente cuyas filas se van a eliminar.
+     */
+    private void removeRowForAgent(DefaultTableModel tableModel, int agentID){
+        for(int row = 0; row < tableModel.getRowCount(); row++)
+            if(Integer.parseInt(tableModel.getValueAt(row, 1).toString())  == agentID){
+                tableModel.removeRow(row);
+                break; // Se eliminó la fila, salir del bucle
             }
     }
 
+
+    /**
+     * Agrega un nuevo turno a la lista de espera en la tabla.
+     * Este método agrega un nuevo turno a la lista de espera en la tabla,
+     * mostrando el turno asignado a los usuarios que están esperando ser atendidos.
+     * @param turn El número del turno a agregar a la lista de espera.
+     */
+    private void addToWaitingList(int turn){
+        try {
+            // Obtener el modelo de la tabla de espera
+            DefaultTableModel waitingListModel = (DefaultTableModel) awaitingTurnsTable.getModel();
+
+            // Crear un arreglo de objetos con la información del turno
+            Object[] info = { turn };
+
+            // Agregar una nueva fila con la información del turno al modelo de la tabla
+            waitingListModel.addRow(info);
+
+            // Mostrar un mensaje de registro o confirmación
+            JOptionPane.showMessageDialog(jInternalFrame1,
+                    "Turno " + turn + " agregado a la lista de espera.");
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir al acceder al modelo de la tabla
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    /**
+     * Elimina un turno de la lista de espera en la tabla.
+     * Este método busca y elimina el turno especificado de la lista de espera en la tabla,
+     * basándose en el número de turno proporcionado.
+     * @param turn El número del turno a eliminar de la lista de espera.
+     */
+    private void removeWaitingList(int turn){
+        try {
+            // Obtener el modelo de la tabla de espera
+            DefaultTableModel waitingListModel = (DefaultTableModel) awaitingTurnsTable.getModel();
+
+            // Iterar sobre todas las filas del modelo de la tabla
+            for(int row = 0;  row < waitingListModel.getRowCount(); row++)
+                // Obtener el turno de la fila actual y verificar si coincide con el turno especificado
+                if(Integer.parseInt(waitingListModel.getValueAt(row, 0).toString()) == turn){
+                    // Si se encuentra el turno, eliminar la fila correspondiente y salir del bucle
+                    waitingListModel.removeRow(row);
+                    break;
+                }
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir al acceder al modelo de la tabla
+            System.out.println(e.getMessage());
+        }
+
+    }
 
     /**
      * @param args the command line arguments
